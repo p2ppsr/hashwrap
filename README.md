@@ -13,7 +13,7 @@ npm i hash-wrap
 ## Example Usage
 
 ```js
-const hashwrap = require('hashwrap')
+const hashwrap = require('hash-wrap')
 
 // You just need the TXID
 // Envelope is an object that contains an SPV envelope
