@@ -1,4 +1,4 @@
-# hashwrap
+# hash-wrap
 
 Get an SPV envelope for any transaction
 
@@ -7,7 +7,7 @@ The code is hosted [on GitHub](https://github.com/p2ppsr/hashwrap) and the packa
 ## Installation
 
 ```sh
-npm i hashwrap
+npm i hash-wrap
 ```
 
 ## Example Usage
