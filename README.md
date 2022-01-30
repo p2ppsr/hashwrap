@@ -2,7 +2,7 @@
 
 Get an SPV envelope for any transaction
 
-The code is hosted [on GitHub](https://github.com/p2ppsr/hashwrap) and the package is available [through NPM](https://www.npmjs.com/package/hashwrap).
+The code is hosted [on GitHub](https://github.com/p2ppsr/hashwrap) and the package is available [through NPM](https://www.npmjs.com/package/hash-wrap).
 
 ## Installation
 
