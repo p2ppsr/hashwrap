@@ -4,6 +4,24 @@ const axios = require('axios')
 /**
  * Returns an SPV envelope given the TXID of the target transaction.
  *
+ * The returned object for mined transactions looks like:
+ * rawTx
+ * proof: {
+ *   txOrId: transaction hash
+ *   target: merkle root
+ *   targetType: 'merkleRoot'
+ *   nodes: array of merkle tree hashes
+ *   index: integer binary encoding of left (1) or right (0) path through the merkle tree
+ * }
+ * 
+ * The returned object for pending transactions looks like:
+ * rawTx
+ * mapiResponses: array of single mapi response for this transaction id
+ * inputs: an object where keys are transaction ids that contributed inputs to this transaction and value is recursive hashwrap of those txids.
+ * 
+ * If the environment setting process.env.TAALAPIKEY has a value then mapi.taal.com is used for pending transaction lookups.
+ * Otherwise mapi.gorillapool.io is used.
+ *
  * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope. Just make sure the transaction is known to WhatsOnChain and the TAAL mAPI server.
  *
  * @returns {Object} The SPV envelope associated with the TXID you provided.
@@ -38,8 +56,17 @@ const hashwrap = async txid => {
       }
     }
   } else {
+    var provider = 'mapi.gorillapool.io'
+    var headers = {}
+
+    var apiKey = process.env['TAALAPIKEY']
+    if (apiKey) {
+        provider = 'mapi.taal.com'
+        headers = { headers: { "Authorization": apiKey } }
+    }
+
     const { data: mapiResponse } = await axios.get(
-      `https://merchantapi.taal.com/mapi/tx/${txid}`
+      `https://${provider}/mapi/tx/${txid}`, headers
     )
     const payloadHash = bsv.crypto.Hash.sha256(
       Buffer.from(mapiResponse.payload)
