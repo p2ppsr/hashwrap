@@ -4,11 +4,33 @@ const axios = require('axios')
 /**
  * Returns an SPV envelope given the TXID of the target transaction.
  *
- * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope. Just make sure the transaction is known to WhatsOnChain and the TAAL mAPI server.
+ * The returned object for mined transactions looks like:
+ * rawTx
+ * proof: {
+ *   txOrId: transaction hash
+ *   target: merkle root
+ *   targetType: 'merkleRoot'
+ *   nodes: array of merkle tree hashes
+ *   index: integer binary encoding of left (1) or right (0) path through the merkle tree
+ * }
+ * 
+ * The returned object for pending transactions looks like:
+ * rawTx
+ * mapiResponses: array of single mapi response for this transaction id
+ * inputs: an object where keys are transaction ids that contributed inputs to this transaction and value is recursive hashwrap of those txids.
+ * 
+ * Uses api.whatsonchain.com to lookup raw transaction and merkle proofs.
+ *
+ * For pending transactions (without merkle proofs):
+ * Use the taalApiKey property on the options parameter object to use TAAL's mAPI.
+ * Otherwise mapi.gorillapool.io is used.
+ *
+ * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope.
+ * @param {Object} options Optional. Provide a TAAL api key with { taalApiKey: 'mainnet_9596de07e92300c6287e43...' }
  *
  * @returns {Object} The SPV envelope associated with the TXID you provided.
  */
-const hashwrap = async txid => {
+const hashwrap = async (txid, options = {}) => {
   if (!txid) {
     throw new Error('TXID is missing')
   }
@@ -38,8 +60,17 @@ const hashwrap = async txid => {
       }
     }
   } else {
+    let provider = 'mapi.gorillapool.io'
+    let headers = {}
+
+    let apiKey = options.taalApiKey
+    if (apiKey) {
+        provider = 'mapi.taal.com'
+        headers = { headers: { "Authorization": apiKey } }
+    }
+
     const { data: mapiResponse } = await axios.get(
-      `https://merchantapi.taal.com/mapi/tx/${txid}`
+      `https://${provider}/mapi/tx/${txid}`, headers
     )
     const payloadHash = bsv.crypto.Hash.sha256(
       Buffer.from(mapiResponse.payload)
