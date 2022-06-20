@@ -34,19 +34,21 @@ const envelope = await hashwrap('your-txid-here')
 Returns an SPV envelope given the TXID of the target transaction.
 
 The returned object for mined transactions looks like:
-rawTx
-proof: {
-txOrId: transaction hash
-target: merkle root
-targetType: 'merkleRoot'
-nodes: array of merkle tree hashes
-index: integer binary encoding of left (1) or right (0) path through the merkle tree
-}
+
+    rawTx
+    proof: {
+      txOrId: transaction hash
+      target: merkle root
+      targetType: 'merkleRoot'
+      nodes: array of merkle tree hashes
+      index: integer binary encoding of left (1) or right (0) path through the merkle tree
+    }
 
 The returned object for pending transactions looks like:
-rawTx
-mapiResponses: array of single mapi response for this transaction id
-inputs: an object where keys are transaction ids that contributed inputs to this transaction and value is recursive hashwrap of those txids.
+
+    rawTx
+    mapiResponses: array of single mapi response for this transaction id
+    inputs: an object where keys are transaction ids that contributed inputs to this transaction and value is recursive hashwrap of those txids.
 
 Uses api.whatsonchain.com to lookup raw transaction and merkle proofs.
 
