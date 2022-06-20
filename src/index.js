@@ -19,14 +19,18 @@ const axios = require('axios')
  * mapiResponses: array of single mapi response for this transaction id
  * inputs: an object where keys are transaction ids that contributed inputs to this transaction and value is recursive hashwrap of those txids.
  * 
- * If the environment setting process.env.TAALAPIKEY has a value then mapi.taal.com is used for pending transaction lookups.
+ * Uses api.whatsonchain.com to lookup raw transaction and merkle proofs.
+ *
+ * For pending transactions (without merkle proofs):
+ * Use the taalApiKey property on the options parameter object to use TAAL's mAPI.
  * Otherwise mapi.gorillapool.io is used.
  *
- * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope. Just make sure the transaction is known to WhatsOnChain and the TAAL mAPI server.
+ * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope.
+ * @param {Object} options Optional. Provide a TAAL api key with { taalApiKey: 'mainnet_9596de07e92300c6287e43...' }
  *
  * @returns {Object} The SPV envelope associated with the TXID you provided.
  */
-const hashwrap = async txid => {
+const hashwrap = async (txid, options = {}) => {
   if (!txid) {
     throw new Error('TXID is missing')
   }
@@ -56,10 +60,10 @@ const hashwrap = async txid => {
       }
     }
   } else {
-    var provider = 'mapi.gorillapool.io'
-    var headers = {}
+    let provider = 'mapi.gorillapool.io'
+    let headers = {}
 
-    var apiKey = process.env['TAALAPIKEY']
+    let apiKey = options.taalApiKey
     if (apiKey) {
         provider = 'mapi.taal.com'
         headers = { headers: { "Authorization": apiKey } }
