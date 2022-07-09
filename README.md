@@ -59,7 +59,7 @@ Otherwise mapi.gorillapool.io is used.
 #### Parameters
 
 *   `txid` **[String](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The confirmed or unconformed TXID for which you would like to generate an SPV envelope.
-*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional. Provide a TAAL api key with { taalApiKey: 'mainnet\_9596de07e92300c6287e43...' } (optional, default `{}`)
+*   `options` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Optional. Provide a TAAL api key with { taalApiKey: 'mainnet\_9596de07e92300c6287e43...' }. Provide { network: 'testnet' or 'mainnet' }. If testnet, a testnet TAAL key is required (optional, default `{}`)
 
 Returns **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** The SPV envelope associated with the TXID you provided.
 

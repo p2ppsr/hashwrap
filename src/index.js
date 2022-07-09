@@ -30,7 +30,7 @@ const axios = require('axios')
  * Otherwise mapi.gorillapool.io is used.
  *
  * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope.
- * @param {Object} options Optional. Provide a TAAL api key with { taalApiKey: 'mainnet_9596de07e92300c6287e43...' }
+ * @param {Object} options Optional. Provide a TAAL api key with { taalApiKey: 'mainnet_9596de07e92300c6287e43...' }. Provide { network: 'testnet' or 'mainnet' }. If testnet, a testnet TAAL key is required
  *
  * @returns {Object} The SPV envelope associated with the TXID you provided.
  */
@@ -41,14 +41,15 @@ const hashwrap = async (txid, options = {}) => {
   if (txid.length !== 64 || !/[0-9a-f]{64}/g.test(txid)) {
     throw new Error('Invalid TXID')
   }
+  const wocNet = options.network === 'testnet' ? 'test' : 'main'
   const { data: rawTx } = await axios.get(
-    `https://api.whatsonchain.com/v1/bsv/main/tx/${txid}/hex`
+    `https://api.whatsonchain.com/v1/bsv/${wocNet}/tx/${txid}/hex`
   )
   if (!rawTx) {
     throw new Error(`Could not find transaction on WhatsOnChain: ${txid}`)
   }
   const { data: proof } = await axios.get(
-    `https://api.whatsonchain.com/v1/bsv/main/tx/${txid}/proof`
+    `https://api.whatsonchain.com/v1/bsv/${wocNet}/tx/${txid}/proof`
   )
   if (proof) {
     return {
@@ -66,6 +67,15 @@ const hashwrap = async (txid, options = {}) => {
   } else {
     let provider = 'mapi.gorillapool.io'
     let headers = {}
+
+    if (options.network === 'testnet') {
+      if (!apiKey) {
+        throw new Error('Taal API key required in testnet!')
+      }
+      if (!apiKey.startsWith('testnet_')) {
+        throw new Error('Taal API key must be a testnet key for testnet')
+      }
+    }
 
     const apiKey = options.taalApiKey
     if (apiKey) {
