@@ -68,6 +68,7 @@ const hashwrap = async (txid, options = {}) => {
     let provider = 'mapi.gorillapool.io'
     let headers = {}
 
+    const apiKey = options.taalApiKey
     if (options.network === 'testnet') {
       if (!apiKey) {
         throw new Error('Taal API key required in testnet!')
@@ -77,7 +78,6 @@ const hashwrap = async (txid, options = {}) => {
       }
     }
 
-    const apiKey = options.taalApiKey
     if (apiKey) {
       provider = 'mapi.taal.com'
       headers = { headers: { Authorization: apiKey } }
