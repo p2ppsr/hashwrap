@@ -69,7 +69,6 @@ const hashwrap = async (txid, options = {}) => {
     let headers = {}
     const apiKey = options.taalApiKey
 
-    const apiKey = options.taalApiKey
     if (options.network === 'testnet') {
       if (!apiKey) {
         throw new Error('Taal API key required in testnet!')
