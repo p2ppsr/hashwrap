@@ -110,7 +110,7 @@ const hashwrap = async (txid, options = {}) => {
     for (const input of tx.inputs) {
       const txid = input.prevTxId.toString('hex')
       if (inputs[txid]) continue
-      inputs[txid] = await hashwrap(txid)
+      inputs[txid] = await hashwrap(txid, options)
     }
     return {
       rawTx,
