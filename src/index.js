@@ -67,6 +67,7 @@ const hashwrap = async (txid, options = {}) => {
   } else {
     let provider = 'mapi.gorillapool.io'
     let headers = {}
+    const apiKey = options.taalApiKey
 
     if (options.network === 'testnet') {
       if (!apiKey) {
@@ -77,7 +78,6 @@ const hashwrap = async (txid, options = {}) => {
       }
     }
 
-    const apiKey = options.taalApiKey
     if (apiKey) {
       provider = 'mapi.taal.com'
       headers = { headers: { Authorization: apiKey } }
