@@ -4,6 +4,7 @@
   "description": "Get an SPV envelope for any transaction",
   "main": "src/index.js",
   "scripts": {
+    "build": "react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",
     "doc": "documentation readme src/index.js --section=API",
