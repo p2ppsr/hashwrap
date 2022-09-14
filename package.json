@@ -33,6 +33,6 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "bsv": "^1.5.5"
+    "babbage-bsv": "^0.1.0"
   }
 }
