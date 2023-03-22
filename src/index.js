@@ -52,6 +52,13 @@ const hashwrap = async (txid, options = {}) => {
     `https://api.whatsonchain.com/v1/bsv/${wocNet}/tx/${txid}/proof`
   )
   if (proof) {
+    // By reversing the order of the branches, we construct the binary string from right to left,
+    // This ensures that the binary string correctly matches the order of the branches in the Merkle tree.
+    const reversedBranches = proof[0].branches.slice().reverse()
+    const index = parseInt(reversedBranches.reduce(
+      (a, e) => ('' + a + (e.pos === 'R' ? '0' : '1')), ''
+    ), 2)
+
     return {
       rawTx,
       proof: {
@@ -59,9 +66,7 @@ const hashwrap = async (txid, options = {}) => {
         target: proof[0].merkleRoot,
         targetType: 'merkleRoot',
         nodes: proof[0].branches.map(x => x.hash),
-        index: parseInt(proof[0].branches.reduce(
-          (a, e) => ('' + a + (e.pos === 'R' ? '0' : '1')), ''
-        ), 2)
+        index: index
       }
     }
   } else {
