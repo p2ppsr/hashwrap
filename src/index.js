@@ -60,7 +60,7 @@ const hashwrap = async (txid, options = {}) => {
         targetType: 'merkleRoot',
         nodes: proof[0].branches.map(x => x.hash),
         index: parseInt(proof[0].branches.reduce(
-          (a, e) => ('' + a + (e.pos === 'R' ? '0' : '1')), ''
+          (a, e) => ('' + (e.pos === 'R' ? '0' : '1') + a), ''
         ), 2)
       }
     }
