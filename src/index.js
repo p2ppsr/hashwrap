@@ -49,19 +49,17 @@ const hashwrap = async (txid, options = {}) => {
     throw new Error(`Could not find transaction on WhatsOnChain: ${txid}`)
   }
   const { data: proof } = await axios.get(
-    `https://api.whatsonchain.com/v1/bsv/${wocNet}/tx/${txid}/proof`
+    `https://api.whatsonchain.com/v1/bsv/${wocNet}/tx/${txid}/proof/tsc`
   )
   if (proof) {
     return {
       rawTx,
       proof: {
-        txOrId: proof[0].hash,
-        target: proof[0].merkleRoot,
+        txOrId: proof[0].txOrId,
+        target: proof[0].target,
         targetType: 'merkleRoot',
-        nodes: proof[0].branches.map(x => x.hash),
-        index: parseInt(proof[0].branches.reduce(
-          (a, e) => ('' + (e.pos === 'R' ? '0' : '1') + a), ''
-        ), 2)
+        nodes: proof[0].nodes,
+        index: proof[0].index
       }
     }
   } else {
