@@ -1,3 +1,4 @@
+const { getMerkleProofFromWhatsOnChain } = require('@cwi/external-services')
 const bsv = require('babbage-bsv')
 const axios = require('axios')
 
@@ -48,18 +49,18 @@ const hashwrap = async (txid, options = {}) => {
   if (!rawTx) {
     throw new Error(`Could not find transaction on WhatsOnChain: ${txid}`)
   }
-  const { data: proof } = await axios.get(
-    `https://api.whatsonchain.com/v1/bsv/${wocNet}/tx/${txid}/proof/tsc`
-  )
+
+  const proof = await getMerkleProofFromWhatsOnChain(txid, wocNet)
+  
   if (proof) {
     return {
       rawTx,
       proof: {
-        txOrId: proof[0].txOrId,
-        target: proof[0].target,
-        targetType: 'merkleRoot',
-        nodes: proof[0].nodes,
-        index: proof[0].index
+        txOrId: proof.txOrId,
+        target: proof.target,
+        targetType: proof.targetType,
+        nodes: proof.nodes,
+        index: proof.index
       }
     }
   } else {
