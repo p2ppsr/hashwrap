@@ -1,4 +1,4 @@
-const { getMerkleProofFromWhatsOnChain } = require('@cwi/external-services')
+const { getMerkleProofFromWhatsOnChain } = require('cwi-external-services')
 const bsv = require('babbage-bsv')
 const axios = require('axios')
 
