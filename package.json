@@ -32,7 +32,7 @@
     "standard": "^16.0.3"
   },
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.6.0",
     "babbage-bsv": "^0.2.0",
     "cwi-base": "^0.1.8",
     "cwi-external-services": "^0.1.5"
