@@ -1,6 +1,6 @@
 {
   "name": "hash-wrap",
-  "version": "1.1.11",
+  "version": "1.1.12",
   "description": "Get an SPV envelope for any transaction",
   "main": "src/index.js",
   "scripts": {
