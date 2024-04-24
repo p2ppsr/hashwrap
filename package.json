@@ -33,8 +33,8 @@
   },
   "dependencies": {
     "axios": "^0.21.1",
-    "babbage-bsv": "^0.2.4",
-    "cwi-base": "^0.4.25",
-    "cwi-external-services": "^0.4.25"
+    "babbage-bsv": "^0.2.5",
+    "cwi-base": "^0.4.26",
+    "cwi-external-services": "^0.4.27"
   }
 }
