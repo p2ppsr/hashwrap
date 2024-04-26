@@ -4,6 +4,7 @@
   "description": "Get an SPV envelope for any transaction",
   "main": "src/index.js",
   "scripts": {
+    "build": "SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "test": "jest",
     "test:watch": "jest --watch",
     "doc": "documentation readme src/index.js --section=API",
@@ -26,12 +27,8 @@
     "url": "https://github.com/p2ppsr/hashwrap/issues"
   },
   "homepage": "https://github.com/p2ppsr/hashwrap#readme",
-  "devDependencies": {
-    "documentation": "^13.2.5",
-    "jest": "^26.6.3",
-    "standard": "^16.0.3"
-  },
   "dependencies": {
+    "@babbage/sdk": "^0.3.0",
     "axios": "^0.21.1",
     "babbage-bsv": "^0.2.5",
     "cwi-base": "^0.4.26",

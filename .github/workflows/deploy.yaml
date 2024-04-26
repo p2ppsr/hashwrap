@@ -1,0 +1,43 @@
+name: Deployment
+on:
+  push:
+    branches:
+      - master
+      - production
+
+env:
+  CURRENT_BRANCH: ${{ github.ref_name }}
+  GCR_HOST: us.gcr.io
+  GOOGLE_PROJECT_ID: babbage-private
+  GCR_IMAGE_NAME: hashwrap
+  IS_STAGING: ${{ github.ref_name == 'master' }}
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+         ref: ${{ env.CURRENT_BRANCH }}
+      - name: Docker Layer Caching
+        uses: satackey/action-docker-layer-caching@v0.0.11
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - run: CWI_NPM_TOKEN=${{ secrets.CWI_NPM_TOKEN }} npm i
+      - run: CI=false npm run build
+      - uses: RafikFarhad/push-to-gcr-github-action@v4.1
+        with:
+          gcloud_service_key: ${{ secrets.DOCKER_REGISTRY_PUSH_KEY }}
+          registry: ${{ env.GCR_HOST }}
+          project_id: ${{ env.GOOGLE_PROJECT_ID }}
+          image_name: ${{ env.GCR_IMAGE_NAME }}
+          image_tag: ${{ env.CURRENT_BRANCH }}-${{ github.sha }}
+      - uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          credentials: ${{ secrets.gcp_credentials }}
+          service: ${{ env.GCR_IMAGE_NAME }}-${{ env.CURRENT_BRANCH }}
+          image: "${{ env.GCR_HOST }}/${{ env.GOOGLE_PROJECT_ID }}/${{ env.GCR_IMAGE_NAME }}:${{ env.CURRENT_BRANCH }}-${{ github.sha }}"
+          timeout: 3540
+
