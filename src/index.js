@@ -1,6 +1,8 @@
 const { getMerkleProofFromWhatsOnChain } = require('cwi-external-services')
 const bsv = require('babbage-bsv')
 const axios = require('axios')
+const { toBEEFfromEnvelope } = require('@babbage/sdk-ts')
+const { toString } = require('cwi-base')
 
 /**
  * Returns an SPV envelope given the TXID of the target transaction.
@@ -31,7 +33,9 @@ const axios = require('axios')
  * Otherwise mapi.gorillapool.io is used.
  *
  * @param {String} txid The confirmed or unconformed TXID for which you would like to generate an SPV envelope.
- * @param {Object} options Optional. Provide a TAAL api key with { taalApiKey: 'mainnet_9596de07e92300c6287e43...' }. Provide { network: 'testnet' or 'mainnet' }. If testnet, a testnet TAAL key is required
+ * @param {Object} options Optional. Provide a TAAL api key with { taalApiKey: 'mainnet_9596de07e92300c6287e43...' }.
+ * Provide { network: 'testnet' or 'mainnet' }. If testnet, a testnet TAAL key is required
+ * Provide { format: 'beefHex' }. For result in BEEF format instead of Envelope format (the default)
  *
  * @returns {Object} The SPV envelope associated with the TXID you provided.
  */
@@ -52,8 +56,10 @@ const hashwrap = async (txid, options = {}) => {
 
   const proof = await getMerkleProofFromWhatsOnChain(txid, wocNet)
   
+  let envelope = undefined
+
   if (proof) {
-    return {
+    envelope = {
       rawTx,
       proof: {
         txOrId: proof.txOrId,
@@ -111,11 +117,19 @@ const hashwrap = async (txid, options = {}) => {
       if (inputs[txid]) continue
       inputs[txid] = await hashwrap(txid, options)
     }
-    return {
+    envelope = {
       rawTx,
       mapiResponses: [mapiResponse],
       inputs
     }
+  }
+
+  if (envelope) {
+    if (options.format === 'beefHex') {
+      const r = toBEEFfromEnvelope(envelope)
+      envelope = asString(r.beef)
+    }
+    return envelope
   }
 }
 
