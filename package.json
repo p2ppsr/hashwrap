@@ -32,10 +32,10 @@
     "standard": "^16.0.3"
   },
   "dependencies": {
-    "@babbage/sdk-ts": "^0.2.53",
+    "@babbage/sdk-ts": "^0.2.54",
     "axios": "^0.21.1",
     "babbage-bsv": "^0.2.5",
-    "cwi-base": "^0.4.48",
-    "cwi-external-services": "^0.4.58"
+    "cwi-base": "^0.4.49",
+    "cwi-external-services": "^0.4.59"
   }
 }
